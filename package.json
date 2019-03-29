@@ -1,0 +1,26 @@
+{
+  "name": "textify-backend",
+  "version": "1.0.0",
+  "description": "Backend of Textify service.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "mocha ./tests --exit"
+  },
+  "keywords": [
+    "twilio",
+    "spotify",
+    "music"
+  ],
+  "author": "eyeino",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "chai-json": "^1.0.0",
+    "mocha": "^6.0.2"
+  }
+}
