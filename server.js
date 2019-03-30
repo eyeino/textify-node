@@ -1,7 +1,11 @@
 const express = require('express');
+const dotenv = require('dotenv');
 
 const server = express();
 server.use(express.json());
+
+// load environment vars from .env
+dotenv.config()
 
 server.post('/', (req, res, next) => {
   if (!req.body.hasOwnProperty('phoneNumber') || 
