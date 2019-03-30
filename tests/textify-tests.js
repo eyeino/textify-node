@@ -41,8 +41,15 @@ describe("Textify", () => {
   });
 
   describe("Searching on Spotify", () => {
-    it('finds an artist based on a search query', () => {
+    chai.use(require('chai-as-promised'));
+    const findTrack = require('../findTrack');
 
+    it('finds an artist/track based on a search query', () => {
+      expect(findTrack('toro y moi')).to.eventually.include({ artistName: 'Toro Y Moi' })
     });
+
+    it('returns null object when no artist/track found', () => {
+      expect(findTrack('zzkjhfalkdshflkasjhdhlfdl')).to.eventually.include({ artistName: null })
+    })
   })
 })
