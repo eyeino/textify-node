@@ -1,11 +1,13 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const helmet = require('helmet');
 
 const findTrack = require('./findTrack');
 const textTrack = require('./textTrack');
 
 const server = express();
 server.use(express.json());
+server.use(helmet());
 
 // load environment vars from .env
 dotenv.config()
