@@ -7,8 +7,7 @@ const twilioClient = new twilio(process.env.TWILIO_ACCOUNT_SID,
 const twilioFromNumber = process.env.TWILIO_FROM_PHONE_NUMBER;
 
 const textTrack = (artistName, trackName, trackLink, phoneNumber) => {
-  const body = `${artistName}'s top track
-                is ${trackName}! Link: ${trackLink}`;
+  const body = `${artistName}'s top track is ${trackName}! Link: ${trackLink}`;
 
   twilioClient.api.account.messages.create({
     from: twilioFromNumber,

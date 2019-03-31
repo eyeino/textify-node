@@ -2,25 +2,43 @@ const chai = require('chai');
 const expect = chai.expect;
 
 describe("Textify", () => {
+  const twilioMagicSuccessful = '+15005550006';
+
   describe("Server response", () => {
     
     chai.use(require('chai-http'));
     chai.use(require('chai-json'));
+
     const server = require('../server');
 
-    it('res with json to req with valid json', () => {
+    it('res with json data to req with json', () => {
       chai.request(server)
       .post('/')
       .set('Content-Type', 'application/json')
       .send({
-        phoneNumber: '1234567890',
+        phoneNumber: twilioMagicSuccessful,
         artistQuery: 'toro y moi'
       })
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
+        expect(res).to.have.deep.property('artistName', 'Toro Y Moi');
       })
     });
+
+    it('res with 400 error if spotify search does not find result', () => {
+      chai.request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send({
+        phoneNumber: twilioMagicSuccessful,
+        artistQuery: 'lkadslkjfalsdafsdkldfkasf'
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+      })
+    });
+
     it('res with 400 error if req body is missing parameters', () => {
       chai.request(server)
       .post('/')
@@ -34,7 +52,6 @@ describe("Textify", () => {
   describe("Texting", () => {
     it('sends a message via SMS', () => {
       const textTrack = require('../textTrack');
-      const twilioMagicSuccessful = '+15005550006';
       expect(textTrack('Toro Y Moi', 'Ordinary Pleasure', 'some-link', twilioMagicSuccessful))
       .to.be.a('string').that.includes('Toro Y Moi');
     })

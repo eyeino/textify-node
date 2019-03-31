@@ -1,42 +1,59 @@
 const express = require('express');
 const dotenv = require('dotenv');
 
+const findTrack = require('./findTrack');
+const textTrack = require('./textTrack');
+
 const server = express();
 server.use(express.json());
 
 // load environment vars from .env
 dotenv.config()
 
-server.post('/', (req, res, next) => {
+server.post('/', async (req, res) => {
   if (!req.body.hasOwnProperty('phoneNumber') || 
       !req.body.hasOwnProperty('artistQuery')) {
-    res.sendStatus(400);
-    return
+    res.sendStatus(400); return
   }
 
   let textSuccess = false;
-  let trackName, artistName, albumName, albumImgUrl;
-  trackName = artistName = albumName = albumImgUrl = null;
   
-  // TODO: get search results from spotify
-    // set track, etc vars
+  try {
+    const { trackName, trackLink, artistName,
+      albumName, albumImgUrl } = await findTrack(req.body.artistQuery);
 
-  // TODO: text results to phone number with twilio
-    // set textSuccess to true
+    if (artistName && trackName && trackLink) {
+      textTrack(artistName, trackName,
+        trackLink, req.body.phoneNumber)
+  
+      // TODO: Make success value depend on Twilio Callback URL feature
+      textSuccess = true;
 
-  const jsonOut = {
-    trackName,
-    artistName,
-    albumName,
-    albumImgUrl,
-    textSuccess
+    } else {
+      res.sendStatus(400); return
+    }
+
+    const jsonOut = {
+      trackName,
+      trackLink,
+      artistName,
+      albumName,
+      albumImgUrl,
+      textSuccess
+    }
+
+    console.log('Sending:', jsonOut)
+    res.json(jsonOut);
+    return
+
+  } catch (err) {
+    res.sendStatus(500); return
   }
-  res.json(jsonOut);
 })
 
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
-  console.log(`Listening on port: ${port}`);
+  console.log(`Server listening on port: ${port}`);
 });
 
 module.exports = server;
