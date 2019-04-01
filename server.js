@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const cors = require('cors');
+const rateLimiter = require('./middleware/rate-limiter');
 
 const findTrack = require('./findTrack');
 const textTrack = require('./textTrack');
@@ -10,6 +11,7 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 server.use(cors());
+server.use(rateLimiter);
 
 // load environment vars from .env
 dotenv.config()
