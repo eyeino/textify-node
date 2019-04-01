@@ -28,8 +28,6 @@ async function findTrack(artistQuery) {
     }
 
   } catch(err) {
-    
-    console.log(err)
 
     return {
       artistName: null,
